@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from config import Settings
+from app.config import Settings
 
 
 def test_settings_use_safe_defaults() -> None:

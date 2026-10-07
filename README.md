@@ -20,7 +20,9 @@ Completed milestones:
 
 Planned milestones:
 
-5. Organize the backend into a maintainable `app/` package.
+5. **Backend package structure** - moved application code into the `app/`
+   package without changing existing behavior.
+
 6. Add a controlled model registry and `GET /models`.
 7. Define and test the `POST /chat` request and response contract.
 8. Add provider adapters for Groq and Google Gemini.
@@ -58,7 +60,7 @@ startup.
 Start the development server:
 
 ```powershell
-python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 The health check is available at <http://127.0.0.1:8000/health>.
@@ -77,14 +79,16 @@ The current suite covers the health endpoint and application configuration.
 
 ```text
 ai-inference-gateway/
+|-- app/
+|   |-- __init__.py
+|   |-- config.py
+|   `-- main.py
 +-- tests/
 |   +-- __init__.py
 |   +-- test_config.py
 |   +-- test_health.py
 +-- .env.example
 +-- .gitignore
-+-- config.py
-+-- main.py
 +-- requirements-dev.txt
 +-- requirements.txt
 +-- README.md

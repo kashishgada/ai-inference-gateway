@@ -1,16 +1,14 @@
-import os
-
-from dotenv import load_dotenv
 from fastapi import FastAPI
 
-load_dotenv()
+from config import get_settings
 
-app = FastAPI(title="ai-inference-gateway")
+settings = get_settings()
+app = FastAPI(title=settings.app_name)
 
 
 @app.get("/health")
 async def health_check() -> dict[str, str]:
     return {
         "status": "ok",
-        "environment": os.getenv("APP_ENV", "development"),
+        "environment": settings.app_env,
     }

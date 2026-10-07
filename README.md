@@ -1,7 +1,7 @@
 # ai-inference-gateway
 
 A secure FastAPI-based AI inference gateway connecting a Next.js frontend to
-multiple LLM providers.
+an LLM provider.
 
 ## Project status
 
@@ -17,15 +17,15 @@ Completed milestones:
 3. **Health endpoint coverage** - added the first automated API test.
 4. **Configuration coverage** - added tests for defaults, environment variables,
    and invalid configuration values.
+5. **Backend package structure** - moved application code into the `app/`
+   package without changing existing behavior.
+6. **Model registry** - added a backend-controlled `GET /models` endpoint for
+   populating the frontend model selector.
 
 Planned milestones:
 
-5. **Backend package structure** - moved application code into the `app/`
-   package without changing existing behavior.
-
-6. Add a controlled model registry and `GET /models`.
 7. Define and test the `POST /chat` request and response contract.
-8. Add provider adapters for Groq and Google Gemini.
+8. Add the Groq provider adapter.
 9. Build the Next.js model selector and chat interface.
 10. Add production hardening such as CORS restrictions, rate limiting, and
     structured logging.
@@ -73,7 +73,10 @@ Run the complete test suite from the repository root:
 python -m pytest -q
 ```
 
-The current suite covers the health endpoint and application configuration.
+The current suite covers the health endpoint, application configuration, and
+the available model registry.
+
+The model list is available at <http://127.0.0.1:8000/models>.
 
 ## Current structure
 
@@ -82,11 +85,18 @@ ai-inference-gateway/
 |-- app/
 |   |-- __init__.py
 |   |-- config.py
-|   `-- main.py
+|   |-- main.py
+|   |-- schemas/
+|   |   |-- __init__.py
+|   |   `-- models.py
+|   `-- services/
+|       |-- __init__.py
+|       `-- model_registry.py
 +-- tests/
 |   +-- __init__.py
 |   +-- test_config.py
 |   +-- test_health.py
+|   +-- test_models.py
 +-- .env.example
 +-- .gitignore
 +-- requirements-dev.txt
@@ -113,3 +123,15 @@ production
 
 Provider API keys will be added later. They will remain in the backend
 environment and will never be sent to the frontend.
+
+## Available models
+
+The backend registry currently exposes these safe model IDs to the frontend:
+
+| ID | Provider | Backend model |
+| --- | --- | --- |
+| `groq-llama-70b` | Groq | `llama-3.3-70b-versatile` |
+| `groq-gpt-oss` | Groq | `openai/gpt-oss-120b` |
+
+The frontend receives only the public ID, label, and provider. Provider model
+names and API-key environment variable names remain internal to the backend.

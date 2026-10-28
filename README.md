@@ -21,13 +21,15 @@ Completed milestones:
    package without changing existing behavior.
 6. **Model registry** - added a backend-controlled `GET /models` endpoint for
    populating the frontend model selector.
+7. **Chat contract** - added validated request and response schemas for the
+   future `POST /chat` endpoint.
 
 Planned milestones:
 
-7. Define and test the `POST /chat` request and response contract.
-8. Add the Groq provider adapter.
-9. Build the Next.js model selector and chat interface.
-10. Add production hardening such as CORS restrictions, rate limiting, and
+8. Add model selection logic and the `POST /chat` route.
+9. Add the Groq provider adapter.
+10. Build the Next.js model selector and chat interface.
+11. Add production hardening such as CORS restrictions, rate limiting, and
     structured logging.
 
 ## Backend setup
@@ -60,8 +62,11 @@ startup.
 Start the development server:
 
 ```powershell
-python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+.\scripts\start.ps1
 ```
+
+The startup script uses the project's virtual environment directly, so manual
+activation is not required.
 
 The health check is available at <http://127.0.0.1:8000/health>.
 
@@ -73,8 +78,8 @@ Run the complete test suite from the repository root:
 python -m pytest -q
 ```
 
-The current suite covers the health endpoint, application configuration, and
-the available model registry.
+The current suite covers the health endpoint, application configuration, the
+available model registry, and chat contract validation.
 
 The model list is available at <http://127.0.0.1:8000/models>.
 
@@ -88,6 +93,7 @@ ai-inference-gateway/
 |   |-- main.py
 |   |-- schemas/
 |   |   |-- __init__.py
+|   |   |-- chat.py
 |   |   `-- models.py
 |   `-- services/
 |       |-- __init__.py
@@ -95,6 +101,7 @@ ai-inference-gateway/
 +-- tests/
 |   +-- __init__.py
 |   +-- test_config.py
+|   +-- test_chat.py
 |   +-- test_health.py
 |   +-- test_models.py
 +-- .env.example
